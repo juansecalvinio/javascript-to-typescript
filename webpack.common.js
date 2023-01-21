@@ -1,8 +1,9 @@
 const path = require("path");
+const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: "./js/main.js",
   output: {
     filename: "main.js",
     path: path.resolve(__dirname, "dist"),
@@ -12,7 +13,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "index.html",
     }),
+    new CopyPlugin({
+      patterns: [{ from: "data", to: "data" }],
+    }),
   ],
+  resolve: {
+    extensions: [".ts", ".js"],
+  },
   module: {
     rules: [
       {
@@ -20,10 +27,13 @@ module.exports = {
         loader: "html-loader",
       },
       {
-        test: /\.m?js$/,
+        test: /\.ts$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader",
+          loader: "ts-loader",
+          options: {
+            transpileOnly: true,
+          },
         },
       },
       {
